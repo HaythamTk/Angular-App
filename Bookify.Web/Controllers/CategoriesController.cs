@@ -38,6 +38,7 @@ namespace Bookify.Web.Controllers
             _context.Add(category);
             _context.SaveChanges();
 
+            TempData["Message"] = "Saved Successfully";
             return RedirectToAction(nameof(Index));
         }
 
@@ -74,6 +75,7 @@ namespace Bookify.Web.Controllers
             category.LastUpdatedOn = DateTime.Now;
 
             _context.SaveChanges();
+            TempData["Message"] = "Saved Successfully";
 
             return RedirectToAction(nameof(Index));
         }

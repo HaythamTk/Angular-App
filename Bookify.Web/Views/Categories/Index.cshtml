@@ -125,7 +125,19 @@
                                 },
                                 success: function () {
                                     //$('#' + itemId).parents('.js-row').html('');
-                                    location.reload();
+                                    //location.reload();
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: "The Data Was Deleted",
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
+                                    .then(function () {
+                                        location.reload();
+                                    });
+                                },
+                                error: function () {
+                                    showErrorMessage();
                                 }
                             });
                         }

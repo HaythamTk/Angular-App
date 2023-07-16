@@ -23,6 +23,17 @@
     {
       "library": "bootbox.js@6.0.0",
       "destination": "wwwroot/lib/bootbox.js/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "sweetalert2@11.7.18",
+      "destination": "wwwroot/lib/sweetalert2/",
+      "files": [
+        "dist/sweetalert2.all.js",
+        "dist/sweetalert2.all.min.js",
+        "dist/sweetalert2.css",
+        "dist/sweetalert2.min.css"
+      ]
     }
   ]
 }

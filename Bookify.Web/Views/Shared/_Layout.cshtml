@@ -57,14 +57,15 @@
 			<!--end::Svg Icon-->
 		</div>
 		<!--end::Scrolltop-->
-
+	<div id="Message" class="d-none">@TempData["Message"]</div>
     <script>var hostUrl = "assets/";</script>
     <!--begin::Global Javascript Bundle(used by all pages)-->
     <script src="~/assets/js/plugins.bundle.js"></script>
     <script src="~/assets/js/scripts.bundle.js"></script>
     <!--end::Global Javascript Bundle-->
+	<script src="~/lib/bootbox.js/bootbox.min.js"></script>
+	<script src="~/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/lib/bootbox.js/bootbox.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
