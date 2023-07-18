@@ -1,4 +1,5 @@
 ﻿using Bookify.Web.Core.Models;
+using Bookify.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +44,7 @@ namespace Bookify.Web.Controllers
         }
 
         [HttpGet]
+        [isTest]
         public IActionResult Edit(int id)
         {
             var category = _context.Categories.Find(id);
@@ -91,7 +93,7 @@ namespace Bookify.Web.Controllers
             category.LastUpdatedOn = DateTime.Now;
             _context.SaveChanges();
 
-            return Ok(category.LastUpdatedOn.ToString());
+            return Ok();
         }
     }
 }
