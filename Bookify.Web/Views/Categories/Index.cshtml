@@ -6,7 +6,7 @@
 
 <div class="card shadow-sm">
     <div class="card-header">
-        <h3 class="card-title">
+        <div class="card-title">
             <div class="symbol symbol-40px me-4">
                 <div class="symbol-label fs-2 fw-semibold text-success">
                     <!--begin::Svg Icon | path: icons/duotune/general/gen002.svg-->
@@ -20,7 +20,7 @@
                 </div>
             </div>
             Categories
-        </h3>
+        </div>
         <div class="card-toolbar">
             <a asp-controller="Categories" asp-action="Create" class="btn btn-sm btn-primary">
                 <i class="bi bi-plus-square-dotted"></i>
@@ -53,7 +53,7 @@
         else
         {
             <div class="table-responsive">
-                <table class="table table-row-dashed table-row-gray-300 gy-7">
+                <table class="table table-row-dashed table-row-gray-300 gy-7" id="myTable">
                     <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
                             <th>Name</th>
@@ -74,7 +74,9 @@
                                     </span>
                                 </td>
                                 <td>@category.CreatedOn</td>
-                                <td>@category.LastUpdatedOn</td>
+                                <td>
+                                    @(category.LastUpdatedOn.HasValue ? category.LastUpdatedOn : "________")
+                                </td>
                                 <td>
                                     <a class="btn btn-sm btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id">
                                         Edit
@@ -96,13 +98,18 @@
         }
     </div>
 </div>
-@Html.AntiForgeryToken();
+@Html.AntiForgeryToken()
 
 @section Scripts {
     <script>
+       
+        //using datatable plugin
+       var myTable = $('#myTable').DataTable();
+
         $(document).ready(function () {
             $('.js-delete').on('click', function () {
                 var itemId = $(this).data('id');
+                currentElement = this;
                 bootbox.confirm({
                     message: 'Are you sure?',
                     buttons: {
@@ -132,8 +139,18 @@
                                             showConfirmButton: false,
                                             timer: 1500
                                         })
+                                        //delete data from body
                                     .then(function () {
-                                        location.reload();
+                                            console.log($(currentElement).parents('tr'));
+
+                                            //to remove data if you dont use datatable
+                                           // $(currentElement).parents('tr').remove();
+
+                                           //to remove data from datatable if dont use this when delete item and
+                                          //  search in it you will find it
+                                            myTable.row($(currentElement).parents('tr'))
+                                                .remove()
+                                                .draw();
                                     });
                                 },
                                 error: function () {
@@ -146,4 +163,5 @@
             });
         });
     </script>
+
 }

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="~/assets/css/plugins.bundle.css" type="text/css" />
     <link rel="stylesheet" href="~/assets/css/style.bundle.css" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
+    <link href="~/lib/datatables/css/datatables.bootstrap4.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Bookify.Web.styles.css" asp-append-version="true" />
 </head>
@@ -65,6 +66,9 @@
     <!--end::Global Javascript Bundle-->
 	<script src="~/lib/bootbox.js/bootbox.min.js"></script>
 	<script src="~/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="~/lib/datatables/js/datatables.bootstrap.min.js"></script>
+    <script src="~/lib/datatables/js/datatables.bootstrap4.js"></script>
+    <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

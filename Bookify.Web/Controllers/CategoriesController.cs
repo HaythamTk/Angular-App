@@ -44,7 +44,6 @@ namespace Bookify.Web.Controllers
         }
 
         [HttpGet]
-        [isTest]
         public IActionResult Edit(int id)
         {
             var category = _context.Categories.Find(id);
