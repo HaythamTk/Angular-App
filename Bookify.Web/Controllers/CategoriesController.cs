@@ -1,4 +1,5 @@
-﻿using Bookify.Web.Core.Models;
+﻿using AutoMapper;
+using Bookify.Web.Core.Models;
 using Bookify.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,18 +9,35 @@ namespace Bookify.Web.Controllers
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CategoriesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
             //TODO: use viewModel
-            var categories = _context.Categories.AsNoTracking().Where(x=>!x.IsDeleted).ToList();
-            return View(categories);
+            //var categories = _context.Categories
+            //    .Select(c=> new CategoryViewModel
+            //    {
+            //        Id = c.Id,
+            //        Name = c.Name,
+            //        IsDeleted = c.IsDeleted,
+            //        CreatedOn = c.CreatedOn,
+            //        LastUpdatedOn = c.LastUpdatedOn
+
+            //    })
+            //    .AsNoTracking().Where(x=>!x.IsDeleted).ToList();
+
+            var categories = _context.Categories.AsNoTracking().Where(x => !x.IsDeleted).ToList();
+
+            //use auto Mapper to map data from category to category ViewModel
+            var viewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -35,7 +53,10 @@ namespace Bookify.Web.Controllers
             if (!ModelState.IsValid)
                 return View("CreateCategory", model);
 
-            var category = new Category { Name = model.Name };
+            var isExists = _context.Categories.Any(x=>x.Name == model.Name);
+
+            // var category = new Category { Name = model.Name };
+            var category =  _mapper.Map<Category>(model);
             _context.Add(category);
             _context.SaveChanges();
 
@@ -57,6 +78,7 @@ namespace Bookify.Web.Controllers
                 Name = category.Name
             };
 
+
             return View("EditCategory", viewModel);
         }
 
@@ -72,7 +94,10 @@ namespace Bookify.Web.Controllers
             if (category is null)
                 return NotFound();
 
-            category.Name = model.Name;
+            //category.Name = model.Name;
+            //category.LastUpdatedOn = DateTime.Now;
+            //mapping by auto mapper
+            category = _mapper.Map(model,category);
             category.LastUpdatedOn = DateTime.Now;
 
             _context.SaveChanges();
@@ -93,6 +118,12 @@ namespace Bookify.Web.Controllers
             _context.SaveChanges();
 
             return Ok();
+        }
+
+        public IActionResult AllowItem(CreateCategoryViewModel model)
+        {
+            var isExists = _context.Categories.Any(x => x.Name == model.Name);
+            return Json(!isExists);
         }
     }
 }
