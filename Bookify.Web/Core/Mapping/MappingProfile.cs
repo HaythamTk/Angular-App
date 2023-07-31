@@ -12,6 +12,11 @@ namespace Bookify.Web.Core.Mapping
             CreateMap<Category, CreateCategoryViewModel>().ReverseMap();
 
             CreateMap<Category, EditCategoryViewModel>().ReverseMap();
+
+            //Author
+            CreateMap<Author,AuthorViewModel>().ReverseMap();
+
+            CreateMap<Author, AuthorFormViewModel>().ReverseMap();
         }
     }
 }
