@@ -22,7 +22,29 @@ namespace Bookify.Web.Controllers
             var viewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(authors);
             return View(viewModel);
         }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View("CreateAuthor");
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(AuthorFormViewModel model)
+        {
+            if (model.Name =="")
+                return View("CreateAuthor", model);
+
+            var isExists = _context.Authors.Any(x => x.Name == model.Name);
+
+            // var category = new Category { Name = model.Name };
+            var author = _mapper.Map<Author>(model);
+            _context.Add(author);
+            _context.SaveChanges();
+
+            TempData["Message"] = "Saved Successfully";
+            return RedirectToAction("Index");
+        }
         [HttpGet]
         public IActionResult Edit(int id)
         {
