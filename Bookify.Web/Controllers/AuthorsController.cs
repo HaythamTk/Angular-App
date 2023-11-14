@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bookify.Web.Core.Models;
+using Bookify.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

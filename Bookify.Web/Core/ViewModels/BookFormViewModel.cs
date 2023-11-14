@@ -22,6 +22,7 @@ namespace Bookify.Web.Core.ViewModels
 
         public IFormFile? Image { get; set; }
 
+
         public string? ImageUrl { get; set; }
 
         [MaxLength(50)]
