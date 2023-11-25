@@ -7,13 +7,16 @@ namespace Bookify.Web.Controllers
     public class BooksController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _environment;
+        private readonly int _maxAllowSize = 2097152;
+        private readonly List<string> _allowExtension = new(){".jpg",".jpeg",".png",".svg"};
+		public BooksController(ApplicationDbContext context, IWebHostEnvironment environment)
+		{
+			_context = context;
+			_environment = environment;
+		}
 
-        public BooksController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        public IActionResult Index()
+		public IActionResult Index()
         {
             return View();
         }
@@ -57,9 +60,26 @@ namespace Bookify.Web.Controllers
                 {
                     book.Categories.Add(new BookCategory { CategoryId = category});
                 }
-                _context.Add(book);
+                if (model.Image is not null)
+                {
+                    if (!_allowExtension.Contains(Path.GetExtension(model.Image.FileName)))
+                    {
+                        ModelState.AddModelError(nameof(model.Image), "the extension not allow");
+                        return View(nameof(Create),model);
+                    }
+                    if (model.Image.Length > _maxAllowSize)
+                    {
+						ModelState.AddModelError(nameof(model.Image), "the max size of image must be 2Mb");
+						return View(nameof(Create), model);
+					}
+                    var imageName = model.Image.FileName;
+                    var path = Path.Combine($"{_environment.WebRootPath}/images" ,imageName);
+                    var stream = System.IO.File.Create(path);
+                    model.Image.CopyTo(stream);
+				}
+				_context.Add(book);
                 _context.SaveChanges();
-                return View();
+                return Ok();
             }
             else
             {
@@ -76,7 +96,7 @@ namespace Bookify.Web.Controllers
                     Authors = authors,
                     Categories = categories,
                 };
-                return RedirectToAction("Index",viewModel);
+                return Ok();
 
             }
             //var authors = _context.Authors.Where(a => !a.IsDeleted)

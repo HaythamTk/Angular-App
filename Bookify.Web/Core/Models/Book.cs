@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bookify.Web.Core.Models
 {
-    [Index(nameof(Title), nameof(AuthorId), IsUnique = true)]
+    //[Index(nameof(Title), nameof(AuthorId), IsUnique = true)]
     public class Book : BaseModel
     {
         public int Id { get; set; }

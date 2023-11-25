@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookify.Web.Core.Models
 {
+    //this make field name unique
     [Index(nameof(Name),IsUnique =true)]
     public class Category :BaseModel
     {
@@ -9,7 +11,6 @@ namespace Bookify.Web.Core.Models
 
         [MaxLength(100)]
         public string Name { get; set; } = null!;
-
         public ICollection<BookCategory> Books { get; set; } = new List<BookCategory>();
     }
 }
