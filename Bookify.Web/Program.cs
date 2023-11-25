@@ -1,4 +1,5 @@
 using Bookify.Web.Core.Mapping;
+using Bookify.Web.Core.ViewModels;
 using Bookify.Web.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
+builder.Services.Configure<GetDataFromAppSetting>(builder.Configuration.GetSection(nameof(GetDataFromAppSetting)));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

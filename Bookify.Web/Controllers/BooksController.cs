@@ -1,6 +1,8 @@
 ﻿using Bookify.Web.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Bookify.Web.Controllers
 {
@@ -8,23 +10,30 @@ namespace Bookify.Web.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _environment;
+        private readonly GetDataFromAppSetting _appSetting;
         private readonly int _maxAllowSize = 2097152;
         private readonly List<string> _allowExtension = new(){".jpg",".jpeg",".png",".svg"};
-		public BooksController(ApplicationDbContext context, IWebHostEnvironment environment)
+        private readonly IConfiguration _configure;
+		public BooksController(ApplicationDbContext context, IWebHostEnvironment environment,IOptions<GetDataFromAppSetting> appSetting,IConfiguration configuration)
 		{
 			_context = context;
 			_environment = environment;
+            _appSetting = appSetting.Value;
+            _configure = configuration;
 		}
 
 		public IActionResult Index()
         {
-            return View();
+
+			return View();
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            var authors = _context.Authors.Where(a=> !a.IsDeleted)
+			var theKey1 = _appSetting.Key;
+            var theKey2 = _configure["GetDataFromAppSetting:key"];
+			var authors = _context.Authors.Where(a=> !a.IsDeleted)
                 .Select(a=> new SelectListItem { Value = a.Id.ToString(),Text = a.Name})
                 .OrderBy(a=>a.Text).ToList();
 
@@ -37,7 +46,8 @@ namespace Bookify.Web.Controllers
                 Authors = authors,
                 Categories = categories,
             };
-            return View("CreateBook", viewModel);
+
+			return View("CreateBook", viewModel);
         }
         [HttpPost]
         public IActionResult Create(BookFormViewModel model)
