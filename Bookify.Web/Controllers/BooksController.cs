@@ -31,7 +31,8 @@ namespace Bookify.Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-			var theKey1 = _appSetting.Key;
+            //get data from appsetting
+			 var theKey1 = _appSetting.Key;
             var theKey2 = _configure["GetDataFromAppSetting:key"];
 			var authors = _context.Authors.Where(a=> !a.IsDeleted)
                 .Select(a=> new SelectListItem { Value = a.Id.ToString(),Text = a.Name})
