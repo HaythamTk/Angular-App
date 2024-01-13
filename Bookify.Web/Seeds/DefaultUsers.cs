@@ -11,7 +11,7 @@ namespace Bookify.Web.Seeds
 			{
 				var admin = new ApplicationUser()
 				{
-					UserName = "admin",
+					UserName = "admin@gmail.com",
 					Email = "admin@gmail.com",
 					FullName = "admin",
 					EmailConfirmed = true,
