@@ -5,6 +5,7 @@ using Bookify.Web.Data;
 using Bookify.Web.Seeds;
 using Bookify.Web.Services;
 using Bookify.Web.Settings;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,7 @@ builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
 builder.Services.Configure<GetDataFromAppSetting>(builder.Configuration.GetSection(nameof(GetDataFromAppSetting)));
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddTransient<IEmailBodyBuilder, EmailBodyBuilder>();
+builder.Services.AddDataProtection().SetApplicationName(nameof(Bookify));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

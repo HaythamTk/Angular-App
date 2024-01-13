@@ -79,7 +79,7 @@
                                     @(author.LastUpdatedOn.HasValue ? author.LastUpdatedOn : "________")
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary" asp-controller="Authors" asp-action="Edit" asp-route-id="@author.Id">
+                                    <a class="btn btn-sm btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary" asp-controller="Authors" asp-action="Edit" asp-route-Key="@author.Key">
                                         Edit
                                     </a>
                                     <a class="btn btn-sm btn-outline btn-outline-dashed btn-outline-danger btn-active-danger-primary js-delete" data-id="@author.Id">

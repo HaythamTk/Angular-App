@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bookify.Web.Core.Models;
 using Bookify.Web.Filters;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,18 +11,24 @@ namespace Bookify.Web.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IDataProtector _dataProtector;
 
-        public AuthorsController(ApplicationDbContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
+		public AuthorsController(ApplicationDbContext context, IMapper mapper, IDataProtectionProvider dataProtector)
+		{
+			_context = context;
+			_mapper = mapper;
+			_dataProtector = dataProtector.CreateProtector("MySecureKey");
+		}
 
-        public IActionResult Index()
+		public IActionResult Index()
         {
             var authors = _context.Authors.AsNoTracking().Where(x => !x.IsDeleted).ToList();
             var viewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(authors);
-            return View(viewModel);
+            foreach (var model in viewModel)
+            {
+                model.Key = _dataProtector.Protect(model.Id.ToString());
+			}
+			return View(viewModel);
         }
         [HttpGet]
         public IActionResult Create()
@@ -47,9 +54,10 @@ namespace Bookify.Web.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string Key)
         {
-            var author = _context.Authors.Find(id);
+            var authoriId = _dataProtector.Unprotect(Key);
+            var author = _context.Authors.Find(int.Parse(authoriId));
             if(author is null)
                 return NotFound();
             //  var viewModel = _mapper.Map(author,AuthorFormViewModel);
@@ -64,7 +72,8 @@ namespace Bookify.Web.Controllers
         {
            if(!ModelState.IsValid)
                 return View("EditAuthor", model);
-            var author = _context.Authors.Find(model.Id);
+            var authorId = _dataProtector.Unprotect(model.Key);
+            var author = _context.Authors.Find(int.Parse(authorId));
             if (author is null)
                 return NotFound();
 
