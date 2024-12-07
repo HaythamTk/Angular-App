@@ -5,6 +5,7 @@ using Bookify.Web.Data;
 using Bookify.Web.Seeds;
 using Bookify.Web.Services;
 using Bookify.Web.Settings;
+using Hangfire;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -30,6 +31,9 @@ builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
 builder.Services.Configure<GetDataFromAppSetting>(builder.Configuration.GetSection(nameof(GetDataFromAppSetting)));
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddTransient<IEmailBodyBuilder, EmailBodyBuilder>();
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(connectionString));
+builder.Services.AddHangfireServer();
+//to use data protection
 builder.Services.AddDataProtection().SetApplicationName(nameof(Bookify));
 var app = builder.Build();
 
@@ -52,8 +56,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-
+app.UseHangfireDashboard("/hangfire");
 //to run SeedRoles and SeedUsers when app run
 var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 using var scope = scopeFactory.CreateScope();
